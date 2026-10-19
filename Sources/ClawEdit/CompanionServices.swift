@@ -1,4 +1,7 @@
+// Copyright 2026 Matthew X Murphy, https://MatthewxMurphy.com.
+// Product attribution: https://builtnotbegged.com. SPDX-License-Identifier: MIT
 import Foundation
+import Combine
 
 enum CompanionPaths {
     static let bundleID = "com.matthewxmurphy.clawedit"
@@ -57,25 +60,6 @@ enum CodableFactory {
         let decoder = Foundation.JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         return decoder
-    }
-}
-
-actor GitHubReleaseChecker {
-    func fetchLatestRelease(repository: String) async throws -> ReleaseInfo {
-        let url = URL(string: "https://api.github.com/repos/\(repository)/releases/latest")!
-        var request = URLRequest(url: url)
-        request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue("ClawEdit", forHTTPHeaderField: "User-Agent")
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let payload = try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
-
-        let isoFormatter = ISO8601DateFormatter()
-        return ReleaseInfo(
-            tagName: payload["tag_name"] as? String ?? "unknown",
-            publishedAt: (payload["published_at"] as? String).flatMap(isoFormatter.date(from:)),
-            htmlURL: payload["html_url"] as? String ?? "https://github.com/\(repository)/releases"
-        )
     }
 }
 
@@ -147,6 +131,7 @@ final class CompanionViewModel: ObservableObject {
             latestReleaseText = "Latest GitHub release: \(release.tagName)"
             latestReleaseURL = release.htmlURL
         } catch {
+            latestReleaseURL = ""
             latestReleaseText = "Update check failed: \(error.localizedDescription)"
         }
     }

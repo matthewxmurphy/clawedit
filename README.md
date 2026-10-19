@@ -63,3 +63,10 @@ OpenClaw can do a lot, but macOS still puts real work behind local privacy contr
 ## License
 
 MIT
+
+## Maintenance
+
+Author/developer: Matthew X Murphy, https://MatthewxMurphy.com. Product attribution:
+https://builtnotbegged.com. Existing MIT licensing and copyright are preserved.
+[Release lookup verification](docs/RELEASE-CHECKS.md) documents the offline native
+checks, current build-environment limitation and source/release boundaries.
